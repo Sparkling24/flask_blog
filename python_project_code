@@ -1,0 +1,150 @@
+python class FoodMenu:
+    def __init__(self):
+        self.menu = {
+            'pizza': 8.99,
+            'salad': 4.99,
+            'soda': 1.49,
+            'coffee': 2.49,
+            'fried rice': 10.50,
+            'chichen': 5.95,
+            'white rice': 10.00,
+            'egg roll': 4.50,
+            'noodles': 6.99,
+            'fruit juice': 3.49,
+            'ice cream': 4.99,
+            'cookies': 3.49,
+            'candy': 2.99,
+            'african jollof': 20.99,
+            'egyptian pasta': 25.99,
+            'greek salad': 15.99,
+            'chinese noodles': 22.99,
+            'thai chicken': 28.99,
+            'indian chicken': 25.99,
+            'mexican chicken': 28.99,
+            'japanese curry': 32.99,
+            'vietnamese noodles': 25.99,
+            'korean noodles': 22.99,
+            'vietnamese rice': 10.00,
+            'banga soup': 15.99,
+            'vietnamese soup': 15.99,
+            'korean soup': 15.99,
+            'french fries': 5.99,
+            'eba': 5.99,
+            'semovita': 5.99,
+            'coke': 1.99,
+            'pepsi': 1.99,
+            'Sprite': 1.99,
+            'mountain dew': 1.99,
+            'water': 1.49,
+            'weat': 6.05,
+            'fufu': 7.95,
+        }
+        self.cart = {}
+    
+    def display_menu(self):
+        print("\n--- Food Menu ---")
+        for item, price in self.menu.items():
+            print(f"{item.capitalize()}: ${price:.2f}")
+        print("------------------")
+    
+    def add_to_cart(self, item, quantity):
+        item = item.lower()
+        if item in self.menu:
+            if item in self.cart:
+                self.cart[item] += quantity
+            else:
+                self.cart[item] = quantity
+            print(f"Added {quantity} {item}(s) to cart.")
+        else:
+            print(f"Item '{item}' is not on the menu.")
+    
+    def view_cart(self):
+        if not self.cart:
+            print("Your cart is empty.")
+            return
+        print("\nYour cart contains:")
+        total = 0
+        for item, quantity in self.cart.items():
+            price = self.menu[item]
+            item_total = price * quantity
+            total += item_total
+            print(f"{item.capitalize()}: {quantity} x ${price:.2f} = ${item_total:.2f}")
+        print(f"Total: ${total:.2f}")
+    
+    def calculate_total(self):
+        total = sum(self.menu[item] * quantity for item, quantity in self.cart.items())
+        return total
+    
+    def checkout(self):
+        if not self.cart:
+            print("Your cart is empty. Nothing to checkout.")
+            return
+        total = self.calculate_total()
+        print(f"Your total is ${total:.2f}")
+        return total
+
+    def process_payment(self, amount):
+        total = self.calculate_total()
+        if amount < total:
+            print(f"Insufficient fund. You need ${total - amount:.2f} more.")
+        elif amount > total:
+            print(f"Payment received. Change: ${amount - total:.2f}")
+        else:
+            print("Payment received. Thank you for your order!")
+        self.cart.clear()  # Clear cart after payment
+        
+    #def process_payment(self, amount):
+       # total = self.calculate_total()
+        #if amount == total:
+            #print(f"Payment successfully received. Thank you for your order!")
+        #else:
+         #   print(f"Payment successfully received. Thank you for your order!")
+        #self.cart.clear()  # Clear cart after payment    
+
+def main():
+    menu = FoodMenu()
+    
+    while True:
+        print("\nOptions:")
+        print("1. Display menu")
+        print("2. Add item to cart")
+        print("3. View cart")
+        print("4. Checkout")
+        print("5. Exit")
+        
+        choice = input("Enter your choice: ")
+        
+        if choice == '1':
+            menu.display_menu()
+        elif choice == '2':
+            item = input("Enter item to add to cart: ").strip().lower()
+            try:
+                quantity = int(input(f"How many {item}(s) do you want to buy? "))
+                if quantity <= 0:
+                    print("Quantity must be greater than zero.")
+                else:
+                    menu.add_to_cart(item, quantity)
+            except ValueError:
+                print("Invalid quantity. Please enter a number.")
+        elif choice == '3':
+            menu.view_cart()
+        elif choice == '4':
+            total = menu.checkout()
+            if total is not None:
+                while True:
+                    try:
+                        amount = float(input("Enter payment amount: $"))
+                        break
+                    except ValueError:
+                        print("Invalid amount. Please enter a number.")
+                menu.process_payment(amount)
+        elif choice == '5':
+            print("Exiting...")
+            print("Thanks for your patronage.")
+            break
+        else:
+            print("Invalid choice. Please select again.")
+
+if __name__ == "__main__":
+    main()
+    
